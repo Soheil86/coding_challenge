@@ -1,34 +1,30 @@
-import { Fragment, ReactElement } from "react";
-import { StartupDTO } from "../../Types/Startup";
+import { Startup } from "../../Types/Startup";
+import { StartupHttpService } from "../../Http/Startup/Startup.http.service";
+import { Card, CardContent, Grid, Typography } from "@mui/material";
+import { useState } from "react";
 
-
-// const StartupList: React.FC<StartupDTO> = ({ response }) => {
-export default function StartupList ()  {
+export default function StartupList() {
+  const [startupList, setStartupList] = useState<Startup[]>([]);
+  StartupHttpService.getStartups().then((res: Startup[]) => setStartupList(res));
   return (
-    <div>StartUp</div>
-  )
-   }
-  
- 
-  // return response.map((startup) => {
-    
-      
-  //   <Card>
-          
-  //         <h1>{startup.name}</h1>
-       
-  //         <div>
-  //         <h2>{startup.dateFounded}</h2>
-  //         <h2>{startup.employees}</h2>
-  //         <h2>{startup.totalFunding}</h2>
-  //         <h2>{startup.currentInvestmentStage}</h2>
-  //         </div>
-  //       <div>
-  //           <h2>{startup.shortDescription}</h2>
-  //       </div>
-  //    </Card>
-  //   )
-  // })
+    <Grid container spacing={2} direction="column" id={"startup-list"}>
+      {startupList.map((startup: Startup, index: number) => <Grid item key={index}>
+        <Card>
+          <CardContent>
+            <Typography sx={{ fontSize: 22 }} color="text.primary" gutterBottom>
+              {startup.name}
+            </Typography>
+            <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
+              Founded: {startup.dateFounded.getFullYear()} | {startup.employees} Employees | $ {startup.totalFunding} Mio.
+              | {startup.currentInvestmentStage}
+            </Typography>
+            <Typography sx={{ fontSize: 16 }} color="text.primary" gutterBottom>
+              {startup.shortDescription}
+            </Typography>
+          </CardContent>
+        </Card>
+      </Grid>)}
+    </Grid>
+  );
+}
 
-
-// export default StartupList
